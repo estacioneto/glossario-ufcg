@@ -6,35 +6,39 @@ import PropTypes from 'prop-types';
 
 const renderOption = item => <Select.Option key={item}>{item}</Select.Option>;
 
-const CustomSearchButton = ({ handleClick }) => (
+const CustomSearchButton = ({ onClick }) => (
   <button
     className="search__button-container pointer-hover lighter-hover"
-    onClick={handleClick}
+    onClick={onClick}
   >
     <Icon className="search__button" icon="search" iconColor='#FFFFFF"' />
   </button>
 );
 
-const Search = ({ items, handleSelect }) => (
+CustomSearchButton.propTypes = {
+  onClick: PropTypes.func,
+};
+
+const Search = ({ value, items, onChange, onSelect, onSearch }) => (
   <aside className="search">
     <AutoComplete
+      value={value}
       dataSource={items.map(renderOption)}
-      optionLabelProp="meaning"
       placeholder="Pesquise..."
-      onSelect={e => handleSelect(e)}
-      filterOption={(inputValue, option) =>
-        option.props.children
-          .toUpperCase()
-          .indexOf(inputValue.toUpperCase()) !== -1
-      }
+      onChange={onChange}
+      filterOptions={false}
+      onSelect={e => onSelect(e)}
     />
-    <CustomSearchButton />
+    <CustomSearchButton onClick={() => onSearch(items)} />
   </aside>
 );
 
 Search.propTypes = {
+  value: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.string),
-  handleSelect: PropTypes.func,
+  onSelect: PropTypes.func,
+  onChange: PropTypes.func,
+  onSearch: PropTypes.func,
 };
 
 export default Search;
